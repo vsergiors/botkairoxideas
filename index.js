@@ -1,5 +1,7 @@
 require("dotenv").config()
 
+const express = require("express")
+
 const {
 Client,
 GatewayIntentBits,
@@ -13,12 +15,24 @@ Routes,
 Events
 } = require("discord.js")
 
+// WEB SERVER (para Render)
+const app = express()
+
+app.get("/", (req, res) => {
+res.send("Bot online")
+})
+
+app.listen(3000, () => {
+console.log("Web service activo")
+})
+
+
 // VARIABLES
 const TOKEN = process.env.DISCORD_TOKEN
 const CLIENT_ID = process.env.CLIENT_ID
 const GUILD_ID = process.env.GUILD_ID
 
-// CONFIG YA PUESTA
+// CONFIG
 const REVIEW_CHANNEL = "1479930919233130655"
 const ACCEPTED_CHANNEL = "1479930918293733423"
 const REVIEW_ROLE = "1479930917584769114"
@@ -75,8 +89,6 @@ console.log(`Bot listo como ${client.user.tag}`)
 // INTERACCIONES
 client.on(Events.InteractionCreate, async interaction => {
 
-
-// COMANDO IDEA
 if (interaction.isChatInputCommand()) {
 
 if (interaction.commandName === "idea") {
@@ -118,7 +130,6 @@ ephemeral: true
 }
 
 
-// BOTONES
 if (interaction.isButton()) {
 
 if (!interaction.member.roles.cache.has(REVIEW_ROLE)) {
@@ -133,7 +144,6 @@ ephemeral: true
 const embed = interaction.message.embeds[0]
 
 
-// APROBAR
 if (interaction.customId === "aprobar") {
 
 const canalAceptadas = client.channels.cache.get(ACCEPTED_CHANNEL)
@@ -158,7 +168,6 @@ components: []
 }
 
 
-// RECHAZAR
 if (interaction.customId === "rechazar") {
 
 await interaction.update({
